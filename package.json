@@ -18,7 +18,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:nowatch": "react-scripts test --watchAll=false",
+    "eslint": "eslint --ext .js --ext .jsx src",
+    "eslint:fix": "eslint --fix --ext .js --ext .jsx src",
+    "test:nowatch": "react-scripts test --watchAll=false --passWithNoTests",
     "prepare": "husky install",
     "prepublish": "npm run eslint:fix && npm run test:nowatch"
   },
@@ -51,7 +53,5 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^7.0.4",
     "prettier": "^2.4.1"
-  },
-  "eslint": "eslint --ext .js --ext .jsx src",
-  "eslint:fix": "eslint --fix --ext .js --ext .jsx src"
+  }
 }
