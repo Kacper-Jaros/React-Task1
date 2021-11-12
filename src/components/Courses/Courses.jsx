@@ -1,28 +1,29 @@
 import styled from 'styled-components';
-import { useState } from 'react/cjs/react.development';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import SearchBar from './components/SearchBar/SearchBar';
-import CourseCard from './components/CourseCard/CourseCard';
-import Button from '../../common/Button/Button';
-import {
-	mockedAuthorsList,
-	mockedCoursesList,
-	BUTTON_TEXT,
-} from '../../constans';
+import { SearchBar } from './components/SearchBar/SearchBar';
+import { CourseCard } from './components/CourseCard/CourseCard';
+import { Button } from 'common/Button/Button';
+import { mockedAuthorsList, mockedCoursesList, BUTTON_TEXT } from 'constans';
 
-import { findAuthors } from '../../helpers/authors';
-import { searchCourse } from '../../helpers/searchCourse';
+import { findAuthors } from 'helpers/authors';
+import { searchCourse } from 'helpers/searchCourse';
 
-const Courses = ({ setView }) => {
+export const Courses = () => {
 	const [search, setSearch] = useState('');
+	const navigate = useNavigate();
 
+	const handleClick = () => {
+		navigate('/courses/add');
+	};
 	return (
 		<Container>
 			<SearchBarAndButton>
 				<SearchBar setSearch={setSearch} />
 				<StyledButton
 					buttonText={BUTTON_TEXT.ADD_NEW_COURSE}
-					handleClick={() => setView(true)}
+					handleClick={handleClick}
 				/>
 			</SearchBarAndButton>
 			{searchCourse(mockedCoursesList, search).map((courses) => (
@@ -33,13 +34,12 @@ const Courses = ({ setView }) => {
 					destription={courses.description}
 					authors={findAuthors(courses, mockedAuthorsList)}
 					created={courses.creationDate}
+					id={courses.id}
 				/>
 			))}
 		</Container>
 	);
 };
-
-export default Courses;
 
 const Container = styled.div`
 	display: flex;

@@ -1,14 +1,28 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router';
 
-import Button from '../../../../common/Button/Button';
-import { COURSE_CARD_FIELD, BUTTON_TEXT } from '../../../../constans';
+import { Button } from 'common/Button/Button';
+import { COURSE_CARD_FIELD, BUTTON_TEXT } from 'constans';
 
-import { validateAuthors } from '../../../../helpers/authors';
-import { timeConvert } from '../../../../helpers/pipeDuration';
+import { validateAuthors } from 'helpers/authors';
+import { timeConvert } from 'helpers/pipeDuration';
 
-const CourseCard = ({ title, duration, destription, authors, created }) => {
+export const CourseCard = ({
+	title,
+	duration,
+	destription,
+	authors,
+	created,
+	id,
+}) => {
 	const names = validateAuthors(authors);
 	const time = timeConvert(duration);
+	const navigate = useNavigate();
+
+	const handleOnClick = () => {
+		navigate(`/courses/${id}`);
+	};
 	return (
 		<CourseCardContainer>
 			<TitelAndDesscription>
@@ -28,13 +42,23 @@ const CourseCard = ({ title, duration, destription, authors, created }) => {
 					<TextField>{COURSE_CARD_FIELD.CREATED}: </TextField>
 					<text>{created}</text>
 				</div>
-				<StyledButton buttonText={BUTTON_TEXT.SHOW_COURSE} />
+				<StyledButton
+					buttonText={BUTTON_TEXT.SHOW_COURSE}
+					handleClick={handleOnClick}
+				/>
 			</AuthorsAndButton>
 		</CourseCardContainer>
 	);
 };
 
-export default CourseCard;
+CourseCard.propTypes = {
+	authors: PropTypes.array,
+	created: PropTypes.string,
+	destription: PropTypes.string,
+	duration: PropTypes.any,
+	id: PropTypes.string,
+	title: PropTypes.string,
+};
 
 const CourseCardContainer = styled.div`
 	display: flex;

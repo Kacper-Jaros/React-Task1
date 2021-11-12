@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Textarea = ({
+export const Textarea = ({
 	labelText,
 	placeholderText,
 	handleOnChange,
@@ -23,7 +24,13 @@ const Textarea = ({
 	);
 };
 
-export default Textarea;
+Textarea.propTypes = {
+	className: PropTypes.string,
+	handleOnChange: PropTypes.func,
+	labelText: PropTypes.string,
+	placeholderText: PropTypes.string,
+	value: PropTypes.any,
+};
 
 const Container = styled.div`
 	display: flex;
