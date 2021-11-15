@@ -1,23 +1,32 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-import Logo from './components/Logo/Logo';
-import Button from '../../common/Button/Button';
+import { Logo } from './components/Logo/Logo';
+import { Button } from 'common/Button/Button';
 
-import { BUTTON_TEXT, USER_NAME } from '../../constans';
+import { BUTTON_TEXT } from 'constans';
 
-const Header = () => {
+export const Header = () => {
+	const navigate = useNavigate();
+	const handleLogout = () => {
+		localStorage.removeItem('token');
+		localStorage.removeItem('user');
+		navigate('/login');
+	};
 	return (
 		<HeaderContainer>
 			<LogoWrapper>
 				<Logo />
 			</LogoWrapper>
-			<UserNameWrapper>{USER_NAME}</UserNameWrapper>
-			<Button buttonText={BUTTON_TEXT.LOGOUT} />
+			{localStorage.getItem('token') ? (
+				<>
+					<UserNameWrapper>{localStorage.getItem('user')}</UserNameWrapper>
+					<Button buttonText={BUTTON_TEXT.LOGOUT} handleClick={handleLogout} />
+				</>
+			) : null}
 		</HeaderContainer>
 	);
 };
-
-export default Header;
 
 const HeaderContainer = styled.div`
 	display: flex;
@@ -26,6 +35,7 @@ const HeaderContainer = styled.div`
 	button {
 		margin-right: 20px;
 	}
+	margin-bottom: 20px;
 `;
 
 const UserNameWrapper = styled.div`

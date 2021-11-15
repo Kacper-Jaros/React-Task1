@@ -1,21 +1,40 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Input = ({ labelText, placeholderText, handleOnChange, value, type }) => {
+export const Input = ({
+	labelText,
+	placeholderText,
+	handleOnChange,
+	value,
+	type,
+	className,
+	name,
+}) => {
 	return (
 		<Container>
 			<label htmlFor='input'>{labelText}</label>
 			<StyledInput
 				type={type ?? 'text'}
+				name={name}
 				id='input'
 				placeholder={placeholderText}
 				onChange={handleOnChange}
 				value={value}
+				className={className}
 			/>
 		</Container>
 	);
 };
 
-export default Input;
+Input.propTypes = {
+	className: PropTypes.string,
+	handleOnChange: PropTypes.func,
+	labelText: PropTypes.string,
+	name: PropTypes.string,
+	placeholderText: PropTypes.string,
+	type: PropTypes.string,
+	value: PropTypes.any,
+};
 
 const StyledInput = styled.input`
 	background-color: transparent;

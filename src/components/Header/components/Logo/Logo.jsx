@@ -1,9 +1,7 @@
 import React from 'react';
 
-import LogoIMG from '../Logo-IMG/LogoIMG.jpg';
+import LogoIMG from 'images/LogoIMG.jpg';
 
-const Logo = () => {
+export const Logo = () => {
 	return <img src={LogoIMG} alt='logo-courses' width='150px' />;
 };
-
-export default Logo;

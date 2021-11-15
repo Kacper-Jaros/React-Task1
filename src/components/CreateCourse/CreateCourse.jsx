@@ -1,10 +1,12 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import { useState } from 'react/cjs/react.development';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Input from '../../common/Input/Input';
-import Button from '../../common/Button/Button';
-import Textarea from '../../common/Textarea/Textarea';
+import { Input } from 'common/Input/Input';
+import { Button } from 'common/Button/Button';
+import { Textarea } from 'common/Textarea/Textarea';
 import {
 	INPUT_TEXT,
 	BUTTON_TEXT,
@@ -13,19 +15,20 @@ import {
 	CREATE_COURSE,
 	mockedAuthorsList,
 	mockedCoursesList,
-} from '../../constans';
+} from 'constans';
 
-import { timeConvert } from '../../helpers/pipeDuration';
-import { newDate } from '../../helpers/dateGeneratop';
+import { timeConvert } from 'helpers/pipeDuration';
+import { newDate } from 'helpers/dateGeneratop';
 
-const CreateCourse = ({ setView }) => {
+export const CreateCourse = () => {
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [authors, setAuthors] = useState(mockedAuthorsList);
 	const [addNewAuthor, setAddNewAuhtor] = useState('');
-	const [newAuthors, setNewAuthors] = useState({});
+	const [newAuthors, setNewAuthors] = useState([]);
 	const [duration, setDuration] = useState(null);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
+	const navigate = useNavigate();
 
 	const handleAddAuthor = (name, id) => {
 		const newElement = { id: id, name: name };
@@ -41,29 +44,41 @@ const CreateCourse = ({ setView }) => {
 		setCourseAuthors(courseAuthors.filter((item) => item.name !== name));
 	};
 
-	const handleNewAuthor = (e) => {
-		setAddNewAuhtor(e.target.value);
-	};
+	const handleNewAuthor = useCallback(
+		(e) => {
+			setAddNewAuhtor(e.target.value);
+		},
+		[addNewAuthor]
+	);
 
 	const handleCreateNewAuthor = () => {
 		const newElement = { id: uuidv4(), name: addNewAuthor };
 
 		setAuthors([...authors, newElement]);
 		setAddNewAuhtor('');
-		setNewAuthors(...newAuthors, newElement);
+		setNewAuthors([...newAuthors, newElement]);
 	};
 
-	const handleTitle = (e) => {
-		setTitle(e.target.value);
-	};
+	const handleTitle = useCallback(
+		(e) => {
+			setTitle(e.target.value);
+		},
+		[title]
+	);
 
-	const handleDescription = (e) => {
-		setDescription(e.target.value);
-	};
+	const handleDescription = useCallback(
+		(e) => {
+			setDescription(e.target.value);
+		},
+		[description]
+	);
 
-	const handleDuration = (e) => {
-		setDuration(e.target.value);
-	};
+	const handleDuration = useCallback(
+		(e) => {
+			setDuration(e.target.value);
+		},
+		[duration]
+	);
 	const handleCreateCourse = () => {
 		if (title === '' || !title) {
 			alert(CREATE_COURSE.EMPTY.TITLE);
@@ -88,12 +103,12 @@ const CreateCourse = ({ setView }) => {
 			description: description,
 			creationDate: newDate(),
 			duration: duration,
-			authors: [courseAuthors.map((el) => el.id)],
+			authors: courseAuthors.map((el) => el.id),
 		};
 
 		mockedCoursesList.push(newElement);
-		mockedAuthorsList.push(newAuthors);
-		setView(false);
+		newAuthors.map((e) => mockedAuthorsList.push(e));
+		navigate('/courses');
 	};
 
 	return (
@@ -102,7 +117,7 @@ const CreateCourse = ({ setView }) => {
 				<Input
 					placeholderText={INPUT_TEXT.CREATE}
 					labelText={LABEL_TEXT.TITLE}
-					value={title}
+					value={title || ''}
 					handleOnChange={handleTitle}
 				/>
 				<CreateCourseButton
@@ -114,7 +129,7 @@ const CreateCourse = ({ setView }) => {
 				<StyledTextarea
 					placeholderText={TEXTAREA_TEXT.DESCRIPTION}
 					labelText={LABEL_TEXT.DESCRIPTION}
-					value={description}
+					value={description || ''}
 					handleOnChange={handleDescription}
 				/>
 			</Description>
@@ -124,7 +139,7 @@ const CreateCourse = ({ setView }) => {
 					<Input
 						placeholderText={INPUT_TEXT.AUTHOR}
 						labelText={LABEL_TEXT.AUTHOR}
-						value={addNewAuthor}
+						value={addNewAuthor || ''}
 						handleOnChange={handleNewAuthor}
 					/>
 					<CreateAuthorButton
@@ -135,7 +150,7 @@ const CreateCourse = ({ setView }) => {
 					<Input
 						placeholderText={INPUT_TEXT.DURATION}
 						labelText={LABEL_TEXT.DURATION}
-						value={duration}
+						value={duration || ''}
 						handleOnChange={handleDuration}
 						type='number'
 					/>
@@ -146,7 +161,7 @@ const CreateCourse = ({ setView }) => {
 				<Authors>
 					<StyledH3>{CREATE_COURSE.AUTHORS}</StyledH3>
 					{authors.map((el) => (
-						<SingleAuthor>
+						<SingleAuthor key={el.id}>
 							<text>{el.name}</text>
 							<Button
 								buttonText={BUTTON_TEXT.ADD_AUTHOR}
@@ -159,7 +174,7 @@ const CreateCourse = ({ setView }) => {
 						<EmptyList>{CREATE_COURSE.EMPTY.AUTHOR}</EmptyList>
 					) : (
 						courseAuthors.map((el) => (
-							<SingleAuthor>
+							<SingleAuthor key={el.id}>
 								<text>{el.name}</text>
 								<Button
 									buttonText={BUTTON_TEXT.DELETE_AUTHOR}
@@ -174,7 +189,9 @@ const CreateCourse = ({ setView }) => {
 	);
 };
 
-export default CreateCourse;
+CreateCourse.propTypes = {
+	setView: PropTypes.func,
+};
 
 const Container = styled.div`
 	display: flex;

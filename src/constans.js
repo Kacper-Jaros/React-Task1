@@ -7,6 +7,26 @@ export const BUTTON_TEXT = {
 	CREATE_AUTHOR: 'Create author',
 	ADD_AUTHOR: 'Add author',
 	DELETE_AUTHOR: 'Delete author',
+	REGISTRATION: 'Registration',
+	LOGIN: 'Login',
+	TYPE: {
+		SUBMIT: 'submit',
+	},
+};
+
+export const COURSE_INFO = {
+	ID: 'ID: ',
+	DURATION: 'Duration: ',
+	CREATED: 'Created: ',
+	AUTHORS: 'Authors: ',
+	BACK: '< Back to course',
+};
+
+export const TEXT = {
+	LOGIN: 'Login',
+	REGISTRATION: 'Registration',
+	LOGIN_COMMENTARY: 'If you not have an account you can ',
+	REGISTRATION_COMMENATRY: 'If you have an account you can ',
 };
 
 export const LABEL_TEXT = {
@@ -14,6 +34,9 @@ export const LABEL_TEXT = {
 	DESCRIPTION: 'Description',
 	AUTHOR: 'Author name',
 	DURATION: 'Duration',
+	NAME: 'Name',
+	EMAIL: 'Email',
+	PASSWORD: 'Password',
 };
 
 export const TEXTAREA_TEXT = {
@@ -27,6 +50,18 @@ export const INPUT_TEXT = {
 	CREATE: 'Enter title...',
 	AUTHOR: 'Enter author name...',
 	DURATION: 'Enter duration in minutes',
+	NAME: 'Enter name',
+	EMAIL: 'Enter email',
+	PASSWORD: 'Enter password',
+	REGISTRATION: {
+		NAME: 'name',
+		EMAIL: 'email',
+		PASSWORD: 'password',
+	},
+	LOGIN: {
+		EMAIL: 'email',
+		PASSWORD: 'password',
+	},
 };
 
 export const COURSE_CARD_FIELD = {
