@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
@@ -13,22 +14,26 @@ import {
 	LABEL_TEXT,
 	TEXTAREA_TEXT,
 	CREATE_COURSE,
-	mockedAuthorsList,
-	mockedCoursesList,
 } from 'constans';
 
 import { timeConvert } from 'helpers/pipeDuration';
 import { newDate } from 'helpers/dateGeneratop';
+import { coursesSaveNewCourse } from 'store/courses/actionCreators';
+import { authorsSaveNewAuthor } from 'store/authors/actionCreators';
+import { getAuthorsList } from 'selectors';
 
 export const CreateCourse = () => {
+	const authorList = useSelector(getAuthorsList);
 	const [courseAuthors, setCourseAuthors] = useState([]);
-	const [authors, setAuthors] = useState(mockedAuthorsList);
+	const [authors, setAuthors] = useState(authorList);
 	const [addNewAuthor, setAddNewAuhtor] = useState('');
-	const [newAuthors, setNewAuthors] = useState([]);
 	const [duration, setDuration] = useState(null);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const blockInvalidChar = (e) =>
+		['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
 
 	const handleAddAuthor = (name, id) => {
 		const newElement = { id: id, name: name };
@@ -44,41 +49,29 @@ export const CreateCourse = () => {
 		setCourseAuthors(courseAuthors.filter((item) => item.name !== name));
 	};
 
-	const handleNewAuthor = useCallback(
-		(e) => {
-			setAddNewAuhtor(e.target.value);
-		},
-		[addNewAuthor]
-	);
+	const handleNewAuthor = useCallback((e) => {
+		setAddNewAuhtor(e.target.value);
+	}, []);
 
 	const handleCreateNewAuthor = () => {
 		const newElement = { id: uuidv4(), name: addNewAuthor };
 
 		setAuthors([...authors, newElement]);
 		setAddNewAuhtor('');
-		setNewAuthors([...newAuthors, newElement]);
+		dispatch(authorsSaveNewAuthor(newElement));
 	};
 
-	const handleTitle = useCallback(
-		(e) => {
-			setTitle(e.target.value);
-		},
-		[title]
-	);
+	const handleTitle = useCallback((e) => {
+		setTitle(e.target.value);
+	}, []);
 
-	const handleDescription = useCallback(
-		(e) => {
-			setDescription(e.target.value);
-		},
-		[description]
-	);
+	const handleDescription = useCallback((e) => {
+		setDescription(e.target.value);
+	}, []);
 
-	const handleDuration = useCallback(
-		(e) => {
-			setDuration(e.target.value);
-		},
-		[duration]
-	);
+	const handleDuration = useCallback((e) => {
+		setDuration(e.target.value);
+	}, []);
 	const handleCreateCourse = () => {
 		if (title === '' || !title) {
 			alert(CREATE_COURSE.EMPTY.TITLE);
@@ -106,8 +99,8 @@ export const CreateCourse = () => {
 			authors: courseAuthors.map((el) => el.id),
 		};
 
-		mockedCoursesList.push(newElement);
-		newAuthors.map((e) => mockedAuthorsList.push(e));
+		dispatch(coursesSaveNewCourse(newElement));
+
 		navigate('/courses');
 	};
 
@@ -152,6 +145,7 @@ export const CreateCourse = () => {
 						labelText={LABEL_TEXT.DURATION}
 						value={duration || ''}
 						handleOnChange={handleDuration}
+						onKeyDown={blockInvalidChar}
 						type='number'
 					/>
 					<text>

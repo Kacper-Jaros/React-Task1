@@ -14,22 +14,18 @@ export const Registration = () => {
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
 
-	const handleInputChange = useCallback(
-		(e) => {
-			if (e.target.name === INPUT_TEXT.REGISTRATION.NAME) {
-				setName(e.target.value);
-			} else if (e.target.name === INPUT_TEXT.REGISTRATION.EMAIL) {
-				setEmail(e.target.value);
-			} else if (e.target.name === INPUT_TEXT.REGISTRATION.PASSWORD) {
-				setPassword(e.target.value);
-			} else return;
-		},
-		[name, email, password]
-	);
+	const handleInputChange = useCallback((e) => {
+		if (e.target.name === INPUT_TEXT.REGISTRATION.NAME) {
+			setName(e.target.value);
+		} else if (e.target.name === INPUT_TEXT.REGISTRATION.EMAIL) {
+			setEmail(e.target.value);
+		} else if (e.target.name === INPUT_TEXT.REGISTRATION.PASSWORD) {
+			setPassword(e.target.value);
+		} else return;
+	}, []);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		await axios
+	const handleSubmit = () => {
+		axios
 			.post('http://localhost:3000/register', {
 				name: name,
 				email: email,

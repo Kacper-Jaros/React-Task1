@@ -1,15 +1,21 @@
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-import { mockedCoursesList, mockedAuthorsList, COURSE_INFO } from 'constans';
+import { COURSE_INFO } from 'constans';
 
 import { findAuthors } from 'helpers/authors';
 import { timeConvert } from 'helpers/pipeDuration';
+import { getCoursesList, getAuthorsList } from 'selectors';
 
 export const CourseInfo = () => {
 	const { id } = useParams();
-	const courseData = mockedCoursesList.find((e) => e.id === id);
-	const authors = findAuthors(courseData, mockedAuthorsList);
+	const coursesList = useSelector(getCoursesList);
+	const authorsList = useSelector(getAuthorsList);
+
+	const courseData = coursesList.find((e) => e.id === id);
+	const authors = findAuthors(courseData, authorsList);
+
 	return (
 		<Container>
 			<Link to={'/courses'}>{COURSE_INFO.BACK}</Link>
