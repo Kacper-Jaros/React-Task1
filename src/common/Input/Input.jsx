@@ -5,6 +5,7 @@ export const Input = ({
 	labelText,
 	placeholderText,
 	handleOnChange,
+	onKeyDown,
 	value,
 	type,
 	className,
@@ -16,11 +17,11 @@ export const Input = ({
 			<StyledInput
 				type={type ?? 'text'}
 				name={name}
-				id='input'
 				placeholder={placeholderText}
 				onChange={handleOnChange}
 				value={value}
 				className={className}
+				onKeyDown={onKeyDown}
 			/>
 		</Container>
 	);

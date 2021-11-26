@@ -1,14 +1,16 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { SearchBar } from './components/SearchBar/SearchBar';
 import { CourseCard } from './components/CourseCard/CourseCard';
 import { Button } from 'common/Button/Button';
-import { mockedAuthorsList, mockedCoursesList, BUTTON_TEXT } from 'constans';
+import { BUTTON_TEXT } from 'constans';
 
 import { findAuthors } from 'helpers/authors';
 import { searchCourse } from 'helpers/searchCourse';
+import { getCoursesList, getAuthorsList } from 'selectors';
 
 export const Courses = () => {
 	const [search, setSearch] = useState('');
@@ -17,6 +19,9 @@ export const Courses = () => {
 	const handleClick = () => {
 		navigate('/courses/add');
 	};
+	const coursesList = useSelector(getCoursesList);
+	const authorsList = useSelector(getAuthorsList);
+
 	return (
 		<Container>
 			<SearchBarAndButton>
@@ -26,13 +31,13 @@ export const Courses = () => {
 					handleClick={handleClick}
 				/>
 			</SearchBarAndButton>
-			{searchCourse(mockedCoursesList, search).map((courses) => (
+			{searchCourse(coursesList, search).map((courses) => (
 				<CourseCard
 					key={courses.id}
 					title={courses.title}
 					duration={courses.duration}
 					destription={courses.description}
-					authors={findAuthors(courses, mockedAuthorsList)}
+					authors={findAuthors(courses, authorsList)}
 					created={courses.creationDate}
 					id={courses.id}
 				/>

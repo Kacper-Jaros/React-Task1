@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 
 import { Button } from 'common/Button/Button';
 import { COURSE_CARD_FIELD, BUTTON_TEXT } from 'constans';
+import { coursesDeleteCourse } from 'store/courses/actionCreators';
 
 import { validateAuthors } from 'helpers/authors';
 import { timeConvert } from 'helpers/pipeDuration';
@@ -19,9 +21,14 @@ export const CourseCard = ({
 	const names = validateAuthors(authors);
 	const time = timeConvert(duration);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleOnClick = () => {
 		navigate(`/courses/${id}`);
+	};
+
+	const handleDeleteCourse = () => {
+		dispatch(coursesDeleteCourse(id));
 	};
 	return (
 		<CourseCardContainer>
@@ -42,10 +49,14 @@ export const CourseCard = ({
 					<TextField>{COURSE_CARD_FIELD.CREATED}: </TextField>
 					<text>{created}</text>
 				</div>
-				<StyledButton
-					buttonText={BUTTON_TEXT.SHOW_COURSE}
-					handleClick={handleOnClick}
-				/>
+				<div>
+					<StyledButton
+						buttonText={BUTTON_TEXT.SHOW_COURSE}
+						handleClick={handleOnClick}
+					/>
+					<StyledButton buttonText={'U'} />
+					<StyledButton buttonText={'D'} handleClick={handleDeleteCourse} />
+				</div>
 			</AuthorsAndButton>
 		</CourseCardContainer>
 	);
@@ -92,4 +103,5 @@ const TextField = styled.text`
 const StyledButton = styled(Button)`
 	align-self: center;
 	margin-top: 20px;
+	margin-left: 10px;
 `;

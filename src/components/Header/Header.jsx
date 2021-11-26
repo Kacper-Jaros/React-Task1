@@ -1,16 +1,21 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Logo } from './components/Logo/Logo';
 import { Button } from 'common/Button/Button';
 
 import { BUTTON_TEXT } from 'constans';
+import { userLogout } from 'store/user/actionCreators';
+import { getUserName } from 'selectors';
 
-export const Header = () => {
+export const Header = ({ userIsLogged }) => {
 	const navigate = useNavigate();
+	const userName = useSelector(getUserName);
+	const dispatch = useDispatch();
+
 	const handleLogout = () => {
-		localStorage.removeItem('token');
-		localStorage.removeItem('user');
+		dispatch(userLogout());
 		navigate('/login');
 	};
 	return (
@@ -18,9 +23,9 @@ export const Header = () => {
 			<LogoWrapper>
 				<Logo />
 			</LogoWrapper>
-			{localStorage.getItem('token') ? (
+			{userIsLogged ? (
 				<>
-					<UserNameWrapper>{localStorage.getItem('user')}</UserNameWrapper>
+					<UserNameWrapper>{userName}</UserNameWrapper>
 					<Button buttonText={BUTTON_TEXT.LOGOUT} handleClick={handleLogout} />
 				</>
 			) : null}

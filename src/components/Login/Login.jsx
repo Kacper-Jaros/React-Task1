@@ -1,37 +1,38 @@
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import { useState, useCallback } from 'react';
 import axios from 'axios';
+import { useState, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
 
 import { LABEL_TEXT, INPUT_TEXT, BUTTON_TEXT, TEXT } from 'constans';
+import { userLoginSucces } from 'store/user/actionCreators';
 
 export const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-	const handleInputChange = useCallback(
-		(e) => {
-			if (e.target.name === INPUT_TEXT.REGISTRATION.EMAIL) {
-				setEmail(e.target.value);
-			} else if (e.target.name === INPUT_TEXT.REGISTRATION.PASSWORD) {
-				setPassword(e.target.value);
-			} else return;
-		},
-		[email, password]
-	);
+	const handleInputChange = useCallback((e) => {
+		if (e.target.name === INPUT_TEXT.REGISTRATION.EMAIL) {
+			setEmail(e.target.value);
+		} else if (e.target.name === INPUT_TEXT.REGISTRATION.PASSWORD) {
+			setPassword(e.target.value);
+		} else return;
+	}, []);
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = (e) => {
 		e.preventDefault();
-		await axios
+		axios
 			.post('http://localhost:3000/login', {
 				email: email,
 				password: password,
 			})
 			.then((response) => {
+				dispatch(userLoginSucces(response.data));
 				localStorage.setItem('token', response.data.result);
 				localStorage.setItem('user', response.data.user.name);
 				navigate('/courses');
