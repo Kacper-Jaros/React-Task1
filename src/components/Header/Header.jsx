@@ -8,14 +8,17 @@ import { Button } from 'common/Button/Button';
 import { BUTTON_TEXT } from 'constans';
 import { userLogout } from 'store/user/actionCreators';
 import { getUserName } from 'selectors';
+import { logoutRequest } from 'servisces';
 
 export const Header = ({ userIsLogged }) => {
 	const navigate = useNavigate();
 	const userName = useSelector(getUserName);
+	const userToken = useSelector((state) => state.userReducer.token);
 	const dispatch = useDispatch();
 
 	const handleLogout = () => {
 		dispatch(userLogout());
+		logoutRequest(userToken);
 		navigate('/login');
 	};
 	return (

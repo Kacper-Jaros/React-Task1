@@ -12,7 +12,7 @@ import { findAuthors } from 'helpers/authors';
 import { searchCourse } from 'helpers/searchCourse';
 import { getCoursesList, getAuthorsList } from 'selectors';
 
-export const Courses = () => {
+export const Courses = ({ userRole }) => {
 	const [search, setSearch] = useState('');
 	const navigate = useNavigate();
 
@@ -26,10 +26,12 @@ export const Courses = () => {
 		<Container>
 			<SearchBarAndButton>
 				<SearchBar setSearch={setSearch} />
-				<StyledButton
-					buttonText={BUTTON_TEXT.ADD_NEW_COURSE}
-					handleClick={handleClick}
-				/>
+				{userRole.toLowerCase() === 'admin' ? (
+					<StyledButton
+						buttonText={BUTTON_TEXT.ADD_NEW_COURSE}
+						handleClick={handleClick}
+					/>
+				) : null}
 			</SearchBarAndButton>
 			{searchCourse(coursesList, search).map((courses) => (
 				<CourseCard
@@ -37,9 +39,10 @@ export const Courses = () => {
 					title={courses.title}
 					duration={courses.duration}
 					destription={courses.description}
-					authors={findAuthors(courses, authorsList)}
+					authors={findAuthors(courses.authors, authorsList)}
 					created={courses.creationDate}
 					id={courses.id}
+					userRole={userRole}
 				/>
 			))}
 		</Container>

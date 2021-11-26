@@ -5,6 +5,7 @@ const userInitalState = {
 	name: '',
 	email: '',
 	token: '',
+	role: '',
 };
 
 export const userReducer = (state = userInitalState, action) => {
@@ -12,9 +13,7 @@ export const userReducer = (state = userInitalState, action) => {
 		case LOGIN_SUCCESS:
 			return {
 				isAuth: true,
-				name: action.payload.user.name,
-				email: action.payload.user.email,
-				token: action.payload.result,
+				...action.payload,
 			};
 		case LOGOUT:
 			localStorage.clear();

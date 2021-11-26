@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Input } from 'common/Input/Input';
@@ -18,14 +18,18 @@ import {
 
 import { timeConvert } from 'helpers/pipeDuration';
 import { newDate } from 'helpers/dateGeneratop';
-import { coursesSaveNewCourse } from 'store/courses/actionCreators';
-import { authorsSaveNewAuthor } from 'store/authors/actionCreators';
-import { getAuthorsList } from 'selectors';
+import { findAuthors } from 'helpers/authors';
+import { getAuthorsList, getCoursesList } from 'selectors';
+import { updateCourse, createNewCourse } from 'store/courses/thunk';
+import { createAuthor } from 'store/authors/thunk';
 
-export const CreateCourse = () => {
+export const CreateForm = () => {
+	const { id } = useParams();
+
 	const authorList = useSelector(getAuthorsList);
+	const coursesList = useSelector(getCoursesList);
+
 	const [courseAuthors, setCourseAuthors] = useState([]);
-	const [authors, setAuthors] = useState(authorList);
 	const [addNewAuthor, setAddNewAuhtor] = useState('');
 	const [duration, setDuration] = useState(null);
 	const [title, setTitle] = useState('');
@@ -35,17 +39,22 @@ export const CreateCourse = () => {
 	const blockInvalidChar = (e) =>
 		['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
 
+	useEffect(() => {
+		if (id) {
+			const courseData = coursesList.find((e) => e.id === id);
+			setTitle(courseData.title);
+			setDescription(courseData.description);
+			setDuration(courseData.duration);
+			setCourseAuthors(findAuthors(courseData.authors, authorList));
+		}
+	}, [id, coursesList, authorList]);
+
 	const handleAddAuthor = (name, id) => {
 		const newElement = { id: id, name: name };
 		setCourseAuthors([...courseAuthors, newElement]);
-
-		setAuthors(authors.filter((item) => item.name !== name));
 	};
 
 	const handleDeleteAuthor = (name, id) => {
-		const newElement = { id: id, name: name };
-		setAuthors([...authors, newElement]);
-
 		setCourseAuthors(courseAuthors.filter((item) => item.name !== name));
 	};
 
@@ -56,9 +65,8 @@ export const CreateCourse = () => {
 	const handleCreateNewAuthor = () => {
 		const newElement = { id: uuidv4(), name: addNewAuthor };
 
-		setAuthors([...authors, newElement]);
 		setAddNewAuhtor('');
-		dispatch(authorsSaveNewAuthor(newElement));
+		dispatch(createAuthor(newElement));
 	};
 
 	const handleTitle = useCallback((e) => {
@@ -72,7 +80,7 @@ export const CreateCourse = () => {
 	const handleDuration = useCallback((e) => {
 		setDuration(e.target.value);
 	}, []);
-	const handleCreateCourse = () => {
+	const handleCreateForm = () => {
 		if (title === '' || !title) {
 			alert(CREATE_COURSE.EMPTY.TITLE);
 			return;
@@ -91,7 +99,6 @@ export const CreateCourse = () => {
 		}
 
 		const newElement = {
-			id: uuidv4(),
 			title: title,
 			description: description,
 			creationDate: newDate(),
@@ -99,7 +106,9 @@ export const CreateCourse = () => {
 			authors: courseAuthors.map((el) => el.id),
 		};
 
-		dispatch(coursesSaveNewCourse(newElement));
+		id
+			? dispatch(updateCourse(id, newElement))
+			: dispatch(createNewCourse(newElement));
 
 		navigate('/courses');
 	};
@@ -113,10 +122,17 @@ export const CreateCourse = () => {
 					value={title || ''}
 					handleOnChange={handleTitle}
 				/>
-				<CreateCourseButton
-					buttonText={BUTTON_TEXT.CREATE}
-					handleClick={handleCreateCourse}
-				/>
+				{id ? (
+					<CreateFormButton
+						buttonText={BUTTON_TEXT.UPDATE}
+						handleClick={handleCreateForm}
+					/>
+				) : (
+					<CreateFormButton
+						buttonText={BUTTON_TEXT.CREATE}
+						handleClick={handleCreateForm}
+					/>
+				)}
 			</Title>
 			<Description>
 				<StyledTextarea
@@ -154,7 +170,11 @@ export const CreateCourse = () => {
 				</NewAuthorAndDuration>
 				<Authors>
 					<StyledH3>{CREATE_COURSE.AUTHORS}</StyledH3>
-					{authors.map((el) => (
+					{findAuthors(
+						courseAuthors.map((el) => el.id),
+						authorList,
+						true
+					).map((el) => (
 						<SingleAuthor key={el.id}>
 							<text>{el.name}</text>
 							<Button
@@ -183,7 +203,7 @@ export const CreateCourse = () => {
 	);
 };
 
-CreateCourse.propTypes = {
+CreateForm.propTypes = {
 	setView: PropTypes.func,
 };
 
@@ -245,7 +265,7 @@ const StyledTextarea = styled(Textarea)`
 	border: 1px solid yellow;
 `;
 
-const CreateCourseButton = styled(Button)`
+const CreateFormButton = styled(Button)`
 	height: 50%;
 	align-self: flex-end;
 `;

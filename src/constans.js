@@ -9,6 +9,7 @@ export const BUTTON_TEXT = {
 	DELETE_AUTHOR: 'Delete author',
 	REGISTRATION: 'Registration',
 	LOGIN: 'Login',
+	UPDATE: 'Update course',
 	TYPE: {
 		SUBMIT: 'submit',
 	},

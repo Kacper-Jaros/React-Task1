@@ -5,10 +5,10 @@ import { useDispatch } from 'react-redux';
 
 import { Button } from 'common/Button/Button';
 import { COURSE_CARD_FIELD, BUTTON_TEXT } from 'constans';
-import { coursesDeleteCourse } from 'store/courses/actionCreators';
 
 import { validateAuthors } from 'helpers/authors';
 import { timeConvert } from 'helpers/pipeDuration';
+import { deleteCourse } from 'store/courses/thunk';
 
 export const CourseCard = ({
 	title,
@@ -17,6 +17,7 @@ export const CourseCard = ({
 	authors,
 	created,
 	id,
+	userRole,
 }) => {
 	const names = validateAuthors(authors);
 	const time = timeConvert(duration);
@@ -28,7 +29,11 @@ export const CourseCard = ({
 	};
 
 	const handleDeleteCourse = () => {
-		dispatch(coursesDeleteCourse(id));
+		dispatch(deleteCourse(id));
+	};
+
+	const handleUpdateCourse = () => {
+		navigate(`/courses/update/${id}`);
 	};
 	return (
 		<CourseCardContainer>
@@ -54,8 +59,12 @@ export const CourseCard = ({
 						buttonText={BUTTON_TEXT.SHOW_COURSE}
 						handleClick={handleOnClick}
 					/>
-					<StyledButton buttonText={'U'} />
-					<StyledButton buttonText={'D'} handleClick={handleDeleteCourse} />
+					{userRole.toLowerCase() === 'admin' ? (
+						<>
+							<StyledButton buttonText={'U'} handleClick={handleUpdateCourse} />
+							<StyledButton buttonText={'D'} handleClick={handleDeleteCourse} />
+						</>
+					) : null}
 				</div>
 			</AuthorsAndButton>
 		</CourseCardContainer>
