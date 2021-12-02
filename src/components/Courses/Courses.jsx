@@ -27,10 +27,12 @@ export const Courses = ({ userRole }) => {
 			<SearchBarAndButton>
 				<SearchBar setSearch={setSearch} />
 				{userRole.toLowerCase() === 'admin' ? (
-					<StyledButton
-						buttonText={BUTTON_TEXT.ADD_NEW_COURSE}
-						handleClick={handleClick}
-					/>
+					<div data-testid='add-new-course-button'>
+						<StyledButton
+							buttonText={BUTTON_TEXT.ADD_NEW_COURSE}
+							handleClick={handleClick}
+						/>
+					</div>
 				) : null}
 			</SearchBarAndButton>
 			{searchCourse(coursesList, search).map((courses) => (

@@ -114,7 +114,7 @@ export const CreateForm = () => {
 	};
 
 	return (
-		<Container>
+		<Container data-testid='create-form'>
 			<Title>
 				<Input
 					placeholderText={INPUT_TEXT.CREATE}
@@ -176,7 +176,7 @@ export const CreateForm = () => {
 						true
 					).map((el) => (
 						<SingleAuthor key={el.id}>
-							<text>{el.name}</text>
+							<text data-testid='authors'>{el.name}</text>
 							<Button
 								buttonText={BUTTON_TEXT.ADD_AUTHOR}
 								handleClick={() => handleAddAuthor(el.name, el.id)}
@@ -189,7 +189,7 @@ export const CreateForm = () => {
 					) : (
 						courseAuthors.map((el) => (
 							<SingleAuthor key={el.id}>
-								<text>{el.name}</text>
+								<text data-testid='authors'>{el.name}</text>
 								<Button
 									buttonText={BUTTON_TEXT.DELETE_AUTHOR}
 									handleClick={() => handleDeleteAuthor(el.name, el.id)}

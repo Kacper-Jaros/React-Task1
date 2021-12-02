@@ -73,7 +73,7 @@ export const COURSE_CARD_FIELD = {
 
 export const CREATE_COURSE = {
 	DURATION: 'Duration',
-	ADD_AUTHOR: 'Add author',
+	ADD_AUTHOR: 'Add new author',
 	AUTHORS: 'Authors',
 	COURSE_AUTHORS: 'Course authors',
 	EMPTY: {

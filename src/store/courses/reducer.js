@@ -16,7 +16,6 @@ export const coursesReducer = (state = coursesInitialState, action) => {
 			return state.filter((e) => e.id !== action.payload);
 		case UPDATE_COURSE:
 			return state.map((e) => {
-				console.log('JEBAĆ PIS', e, action, e.id === action.payload.id);
 				return e.id === action.payload.id ? { ...e, ...action.payload } : e;
 			});
 		default:

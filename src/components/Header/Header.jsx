@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Logo } from './components/Logo/Logo';
@@ -11,7 +11,7 @@ import { getUserName } from 'selectors';
 import { logoutRequest } from 'servisces';
 
 export const Header = ({ userIsLogged }) => {
-	const navigate = useNavigate();
+	//const navigate = useNavigate();
 	const userName = useSelector(getUserName);
 	const userToken = useSelector((state) => state.userReducer.token);
 	const dispatch = useDispatch();
@@ -19,7 +19,7 @@ export const Header = ({ userIsLogged }) => {
 	const handleLogout = () => {
 		dispatch(userLogout());
 		logoutRequest(userToken);
-		navigate('/login');
+		//navigate('/login');
 	};
 	return (
 		<HeaderContainer>
