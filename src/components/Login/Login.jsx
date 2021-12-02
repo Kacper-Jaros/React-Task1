@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import axios from 'axios';
 import { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -8,7 +7,7 @@ import { Input } from 'common/Input/Input';
 import { Button } from 'common/Button/Button';
 
 import { LABEL_TEXT, INPUT_TEXT, BUTTON_TEXT, TEXT } from 'constans';
-import { userLoginSucces } from 'store/user/actionCreators';
+import { loginUser } from 'store/user/thunk';
 
 export const Login = () => {
 	const [email, setEmail] = useState('');
@@ -26,18 +25,8 @@ export const Login = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		axios
-			.post('http://localhost:3000/login', {
-				email: email,
-				password: password,
-			})
-			.then((response) => {
-				dispatch(userLoginSucces(response.data));
-				localStorage.setItem('token', response.data.result);
-				localStorage.setItem('user', response.data.user.name);
-				navigate('/courses');
-			})
-			.catch((err) => console.warn(err));
+		dispatch(loginUser(email, password));
+		navigate('/courses');
 	};
 
 	return (

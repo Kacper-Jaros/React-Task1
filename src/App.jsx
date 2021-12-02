@@ -1,17 +1,31 @@
 import { useRoutes, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Header } from 'components/Header/Header';
 import { Courses } from 'components/Courses/Courses';
-import { CreateCourse } from 'components/CreateCourse/CreateCourse';
+import { CreateForm } from 'components/CreateCourse/CreateForm';
 import { Registration } from 'components/Registration/Registration';
 import { Login } from 'components/Login/Login';
 import { CourseInfo } from 'components/CourseInfo/CourseInfo';
+import { PrivateRoute } from 'components/PrivateRouter/PrivateRouter.jsx';
 
 import './servisces.js';
 
 const App = () => {
-	const userIsLogged =
-		localStorage.getItem('user') && localStorage.getItem('token');
+	const isAuth = useSelector((state) => state.userReducer.isAuth);
+	const role = useSelector((state) => state.userReducer.role);
+	const [userRole, setUserRole] = useState('');
+	const [userIsLogged, setUserIsLogger] = useState(null);
+	useEffect(() => {
+		setUserIsLogger(
+			localStorage.getItem('user') && localStorage.getItem('token')
+		);
+	}, [isAuth, setUserIsLogger]);
+	useEffect(() => {
+		setUserRole(role);
+	}, [role]);
+
 	const routes = useRoutes(
 		!userIsLogged
 			? [
@@ -31,7 +45,7 @@ const App = () => {
 			: [
 					{
 						path: '/courses',
-						element: <Courses />,
+						element: <Courses userRole={userRole} />,
 					},
 					{
 						path: '/courses/:id',
@@ -39,7 +53,19 @@ const App = () => {
 					},
 					{
 						path: '/courses/add',
-						element: <CreateCourse />,
+						element: (
+							<PrivateRoute>
+								<CreateForm />
+							</PrivateRoute>
+						),
+					},
+					{
+						path: '/courses/update/:id',
+						element: (
+							<PrivateRoute>
+								<CreateForm />
+							</PrivateRoute>
+						),
 					},
 					{
 						path: '*',
