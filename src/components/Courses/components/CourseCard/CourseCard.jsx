@@ -36,7 +36,7 @@ export const CourseCard = ({
 		navigate(`/courses/update/${id}`);
 	};
 	return (
-		<CourseCardContainer>
+		<CourseCardContainer data-testid='courses-card'>
 			<TitelAndDesscription>
 				<StyledTitle>{title}</StyledTitle>
 				<StyledDescription>{destription}</StyledDescription>
